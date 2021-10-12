@@ -1,0 +1,28 @@
+version: '3'
+services:
+  mysql-database:
+    image: "mysql:latest"
+    volumes:
+      - /var/lib/docker/volumes/mysql-db:/var/lib/mysql-db
+    environment:
+      - MYSQL_DATABASE=laboratorna5
+      - MYSQL_ROOT_PASSWORD=password
+      - MYSQL_HOST=mysql-database
+  java-web:
+    image: "ubuntu:bionic"
+    restart: on-failure
+    depends_on:
+      - mysql-database
+    environment:
+      - DATABASE_HOST=mysql-database
+      - DATABASE_USER=root
+      - DATABASE_PASSWORD=password
+      - DATABASE_NAME=laboratorna5
+      - DATABASE_PORT=3306
+    build:
+      context: .
+      dockerfile: "Dockerfile"
+    ports:
+      - 8080:8080
+      - 9090:9090
+      - 9100:9100
